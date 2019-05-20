@@ -1,4 +1,3 @@
-
 " An example for a vimrc file.
 "
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
@@ -111,9 +110,45 @@ packadd matchit
 
 " MY VIM SETTINGS
 
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+" Declare the list of plugins.
+" Plug 'tpope/vim-sensible' " basic vim configuration
+Plug 'morhetz/gruvbox' " color scheme
+Plug 'Valloric/YouCompleteMe' " helps autocomplete in vim
+Plug 'posva/vim-vue' " gives vue syntax
+Plug 'ap/vim-css-color' " changes css color names to their color
+Plug 'leafgarland/typescript-vim' " typescript highlighting
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ } " For language server protocol
+Plug 'mileszs/ack.vim' " fuzzy finder for lines NOT SURE IF IT WORKS
+Plug 'vim-airline/vim-airline' " Status bar
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'thosakwe/vim-flutter'
+
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
+" puts the back up files in my .vim folder (.ext~ files)
+	set backupdir=~/.vim/backup
+
 " exits insert mode
 	:imap jj <Esc>
-
+" tab will give two spaces for vue files
+	autocmd FileType vue setlocal expandtab
+	autocmd FileType vue setlocal tabstop=2
+	autocmd FileType vue setlocal softtabstop=2
+	autocmd FileType vue setlocal shiftwidth=2
+" tab will give four spaces for python files
+	autocmd FileType python setlocal expandtab
+	autocmd FileType python setlocal tabstop=4
+	autocmd FileType python setlocal softtabstop=4
+	autocmd FileType python setlocal shiftwidth=4
+" enable all python syntax highlights
+	let g:python_highlight_all = 1
 " line numbers
 	set number relativenumber
 " some autocomplete
@@ -123,7 +158,9 @@ packadd matchit
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " sets spliting to bottom and right
-	set splitbelow splitright
+
+" has airline display ale
+	let g:airline#extensions#ale#enabled = 1
 
 " split navigation
 	map <C-h> <C-w>h
@@ -136,3 +173,32 @@ packadd matchit
 
 " example snippet
 	" autocmd FileType html inoremap < <>
+
+" stop mouse input
+	set mouse=
+	set ttymouse=
+
+" stop preview for autocomplete
+	set completeopt-=preview
+
+" set for more color
+	set termguicolors
+
+" set the colorscheme
+	set background=dark
+	colorscheme gruvbox
+
+" keep the cursor in the middle of the window
+	augroup VCenterCursor
+	  au!
+	  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+		\ let &scrolloff=winheight(win_getid())/2
+	augroup END
+
+" Language Server Protocol settings
+	set hidden
+
+	let g:LanguageClient_autoStart = 1
+	let g:LanguageClient_serverCommands = {
+				\ 'python': ['/home/tdecelle/Documents/anaconda3/bin/pyls'],
+				\ }
