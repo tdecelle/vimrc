@@ -128,6 +128,7 @@ Plug 'mileszs/ack.vim' " fuzzy finder for lines NOT SURE IF IT WORKS
 Plug 'vim-airline/vim-airline' " Status bar
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'thosakwe/vim-flutter'
+Plug 'scrooloose/nerdtree' " Nicer file explorer
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -201,4 +202,5 @@ call plug#end()
 	let g:LanguageClient_autoStart = 1
 	let g:LanguageClient_serverCommands = {
 				\ 'python': ['/home/tdecelle/Documents/anaconda3/bin/pyls'],
+				\ 'vue': ['/usr/local/bin/vls'],
 				\ }
