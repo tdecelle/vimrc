@@ -1,206 +1,159 @@
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2016 Mar 25
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
+syntax on
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
+set guicursor=
+set noshowmatch
+set relativenumber
+set nohlsearch
+set hidden
+set noerrorbells
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set nu
+set nowrap
+set smartcase
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+set incsearch
+set termguicolors
+set scrolloff=8
 
-" Use Vim settings, rather than Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+" Give more space for displaying messages.
+set cmdheight=2
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=50
 
-if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
-else
-  set backup		" keep a backup file (restore to previous version)
-  set undofile		" keep an undo file (undo changes after closing)
-endif
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
+set colorcolumn=80
+highlight ColorColumn ctermbg=0 guibg=lightgrey
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
+call plug#begin('~/AppData/Local/nvim/plugged')
 
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tweekmonster/gofmt.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-utils/vim-man'
+Plug 'mbbill/undotree'
+Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/fzf', {'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
-endif
+" Color Schemes
+Plug 'gruvbox-community/gruvbox'
+Plug 'sainnhe/gruvbox-material'
+Plug 'phanviet/vim-monokai-pro'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'flazz/vim-colorschemes'
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
-
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
-
-  augroup END
-
-else
-
-  set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
-endif
-
-if has('langmap') && exists('+langnoremap')
-  " Prevent that the langmap option applies to characters that result from a
-  " mapping.  If unset (default), this may break plugins (but it's backward
-  " compatible).
-  set langnoremap
-endif
-
-
-" Add optional packages.
-"
-" The matchit plugin makes the % command work better, but it is not backwards
-" compatible.
-packadd matchit
-
-" MY VIM SETTINGS
-
-" Plugins will be downloaded under the specified directory.
-call plug#begin('~/.vim/plugged')
-
-" Declare the list of plugins.
-" Plug 'tpope/vim-sensible' " basic vim configuration
-Plug 'morhetz/gruvbox' " color scheme
-Plug 'Valloric/YouCompleteMe' " helps autocomplete in vim
-Plug 'posva/vim-vue' " gives vue syntax
-Plug 'ap/vim-css-color' " changes css color names to their color
-Plug 'leafgarland/typescript-vim' " typescript highlighting
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ } " For language server protocol
-Plug 'mileszs/ack.vim' " fuzzy finder for lines NOT SURE IF IT WORKS
-Plug 'vim-airline/vim-airline' " Status bar
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'thosakwe/vim-flutter'
-Plug 'scrooloose/nerdtree' " Nicer file explorer
-
-" List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-" puts the back up files in my .vim folder (.ext~ files)
-	set backupdir=~/.vim/backup
+" --- vim go (polyglot) settings.
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_auto_sameids = 1
 
-" exits insert mode
-	:imap jj <Esc>
-" tab will give two spaces for vue files
-	autocmd FileType vue setlocal expandtab
-	autocmd FileType vue setlocal tabstop=2
-	autocmd FileType vue setlocal softtabstop=2
-	autocmd FileType vue setlocal shiftwidth=2
-" tab will give four spaces for python files
-	autocmd FileType python setlocal expandtab
-	autocmd FileType python setlocal tabstop=4
-	autocmd FileType python setlocal softtabstop=4
-	autocmd FileType python setlocal shiftwidth=4
-" enable all python syntax highlights
-	let g:python_highlight_all = 1
-" line numbers
-	set number relativenumber
-" some autocomplete
-	set wildmode=longest,list,full
+set background=dark
 
-" removes automatic commenting
-	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+let g:airline_theme = 'gruvbox_material'
 
-" sets spliting to bottom and right
+let g:gruvbox_material_background = 'soft'
 
-" has airline display ale
-	let g:airline#extensions#ale#enabled = 1
+colorscheme gruvbox-material
 
-" split navigation
-	map <C-h> <C-w>h
-	map <C-j> <C-w>j
-	map <C-k> <C-w>k
-	map <C-l> <C-w>l
+if executable('rg')
+	let g:rg_derive_root='true'
+endif
 
-" removes whitespace on save
-	autocmd BufWritePre * %s/\s\+$//e
+let loaded_matchparen = 1
+let mapleader = " "
 
-" example snippet
-	" autocmd FileType html inoremap < <>
+let g:netrw_liststyle = 3
+let g:vrfr_rg = 'true'
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
 
-" stop mouse input
-	set mouse=
-	set ttymouse=
+nnoremap <leader>fr :%s/
+nnoremap <leader>ve :e $MYVIMRC<CR>
+nnoremap <leader>vr :so $MYVIMRC<CR>
+nnoremap <leader>\| :vsplit<CR>
+nnoremap <leader>_ :split<CR>
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <leader>ps :Rg<SPACE>
+nnoremap <C-p> :GFiles<CR>
+nnoremap <leader>pf :Files<CR>
+nnoremap <leader>+ :vertical resize +5<CR>
+nnoremap <leader>- :vertical resize -5<CR>
+nnoremap <leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
+vnoremap J :m '>+`<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
-" stop preview for autocomplete
-	set completeopt-=preview
+" Vim with me?
+nnoremap <leadervwm :colorscheme gruvbox<bar>:set background=dark<CR>
+nmap <leadervtm :highlight Pmenu ctermbg=gray guibg=gray
 
-" set for more color
-	set termguicolors
+vnoremap X "_d
+inoremap jj <esc>
 
-" set the colorscheme
-	set background=dark
-	colorscheme gruvbox
+function! s:check_back_space() abort
+    let col = col('.') -1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunction
 
-" keep the cursor in the middle of the window
-	augroup VCenterCursor
-	  au!
-	  au BufEnter,WinEnter,WinNew,VimResized *,*.*
-		\ let &scrolloff=winheight(win_getid())/2
-	augroup END
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
 
-" Language Server Protocol settings
-	set hidden
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <silent><expr> <C-space> coc#refresh()
 
-	let g:LanguageClient_autoStart = 1
-	let g:LanguageClient_serverCommands = {
-				\ 'python': ['/home/tdecelle/Documents/anaconda3/bin/pyls'],
-				\ 'vue': ['/usr/local/bin/vls'],
-				\ }
+" GoTo code navigation.
+nmap <leader>gd <Plug>(coc-definition)
+nmap <leader>gy <Plug>(coc-type-definition)
+nmap <leader>gi <Plug>(coc-implementation)
+nmap <leader>gr <Plug>(coc-references)
+nmap <leader>rr <Plug>(coc-rename)
+nmap <leader>g[ <Plug>(coc-diagnostic-prev)
+nmap <leader>g] <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>gp <Plug>(coc-diagnostic-prev-error)
+nmap <silent> <leader>gn <Plug>(coc-diagnostic-next-error)
+nnoremap <leader>cr :CocRestart
+
+" Sweet Sweet FuGITive
+nmap <leader>gf :diffget //3<CR>
+nmap <leader>gj :diffget //2<CR>
+nmap <leader>gs :G<CR>
+nmap <leader>gc :Gcommit<CR>
+nmap <leader>gp :Gpush<CR>
+
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+autocmd BufWritePre * :call TrimWhitespace()
